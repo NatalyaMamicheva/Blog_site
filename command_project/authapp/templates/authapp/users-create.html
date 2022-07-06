@@ -1,0 +1,72 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %} Регистрация {% endblock %}
+{% block content %}
+<div class="u-align-center">
+<h1 class="mt-4">Создание пользователя</h1>
+{% if messages or form.non_field_errors or form.email.errors or form.password.errors%}
+<div class="alert
+            {% if messages %} alert-success {% else %} alert-warning {% endif %}
+            alert-dismissible fade show" role="alert"
+     style="margin-top: 50px;">
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% elif form.non_field_errors%}
+        {% for error in form.non_field_errors %}
+            {{ error }}
+        {% endfor %}
+    {% elif form.email.errors %}
+        {% for error in form.email.errors %}
+            {{error}}
+        {% endfor %}
+    {% else %}
+        {% for error in form.password.errors %}
+            {{error}}
+        {% endfor %}
+    {% endif %}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+
+{% if next %}
+<form action="{% url 'auth:users_create' %}?next={{next}}" method="post">
+    {% csrf_token %}
+    {%else%}
+    <form action="{% url 'auth:users_create' %}" method="post" enctype="multipart/form-data">
+        {% endif %}
+        {% csrf_token %}
+        <div class="reg_form_main">
+            <div class="form-row" style="width: 50%; margin-left: 25%;">
+                <div class="reg-form-1">
+                    <label class="mid mb-1" for="{{ form.username.id_for_label }}">Никнейм</label>
+                    <input class="form-control" {{ form.username }}
+                </div>
+                <div class="reg-form-1">
+                    <label class="mid mb-1" for="{{ form.email.id_for_label }}">Адрес электронной
+                        почты</label>
+                    <input class="form-control" {{ form.email }}
+                </div>
+                <div class="reg-form-1">
+                    <label class="mid mb-1" for="{{ form.password1.id_for_label }}">Пароль</label>
+                    <input class="form-control" {{ form.password1 }}
+                </div>
+                <div class="reg-form-1>
+                        <label class=" mid mb-1
+                " for="{{ form.password2.id_for_label }}">Повторите пароль</label>
+                <input class="form-control" {{ form.password2 }}
+            </div>
+            <div class="reg-form-1 save">
+                <input class="btn btn-outline-dark" type="submit" value="Сохранить">
+            </div>
+        </div>
+        </div>
+    </form>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'mainapp/base.html' %}
+{% block title %} Результаты поиска {% endblock %}
+{% block content %}
+
+<section class="u-align-center">
+    <h1>результаты поиска по "{{ search_name }}" среди статей</h1>
+
+
+    <form method="get">
+        <button type="submit" class="btn btn-sm btn-primary btn-raised mr-3" name="search" value="{{ search_name }}">
+            Сортировать </button>
+        <input name="sort" type="checkbox" value="-likes" {{ likes }}>"сначала рейтинг выше"
+        <input name="sort" type="checkbox" value="likes" {{ likes }}>"сначала рейтинг ниже"
+        <input name="sort" type="checkbox" value="-created_date" {{ created_date }}>"сначала новые"
+        <input name="sort" type="checkbox" value="created_date" {{ created_date }}>"сначала старые"
+    </form>
+<br>
+
+    {% if articles %}
+        {% for object in articles %}
+            {% if not object.is_banned %}
+                <div class="card col-lg-6 offset-lg-3 mb-3">
+                    <div class="card-body">
+                        <a>
+                          <h2 class="card-title my-3"> {{ object.title }} </h2>
+                        </a>
+                        <div class="text-muted mb-3">
+                            <div>
+                                <span>created: {{ object.created_date|date:"N j Y" }} |</span>
+                                <span>Автор: {{ object.user }}</span>
+                                <span>Категория: {{ object.category }}</span>
+                            </div>
+                        </div>
+                        <p class="card-text">{{ object.article_text|truncatewords:100 }}</p>
+                        <a class='btn btn-light' href="{% url 'mainapp:article' object.id %}">Читать дальше ...</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>Не найдено ничего по вашему запросу<br>Попробуйте повторить запрос с другой формулировкой</p>
+    {% endif %}
+
+    <!-- Pagination -->
+  <div class="row">
+    <nav class="col-lg-6 offset-lg-3 mt-4 d-flex justify-content-center">
+      <ul class="pagination">
+
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+        <li class=" page-item {% if page_obj.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#">Next</a>
+        </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+  </div>
+  <!-- /Pagination -->
+{% endblock %}
+
+    </section>

@@ -1,0 +1,98 @@
+{% extends 'mainapp/base.html' %}
+{% block title %} Результаты поиска {% endblock %}
+{% block content %}
+    <h1>результаты поиска по «{{ search_name }}»</h1>
+    {% if object_list %}
+        {if not object.is_banned %}
+                {% for object in object_list %}
+                    {% if object.title %}
+                        <div class="card col-lg-6 offset-lg-3 mb-3">
+                            <div class="card-body">
+                                <a>
+                                  <h2 class="card-title my-3"> {{ object.title }} </h2>
+                                </a>
+                                <div class="text-muted mb-3">
+                                    <div>
+                                        <span>created: {{ object.created_date|date:"N j Y" }} |</span>
+                                        <span>Автор: {{ object.user }}</span>
+                                        <span>Категория: {{ object.category }}</span>
+                                    </div>
+                                </div>
+                                <p class="card-text">{{ object.article_text|truncatewords:20 }}</p>
+                                <a class='btn btn-light' href="{% url 'mainapp:article' object.id %}">Read more ...</a>
+                            </div>
+                        </div>
+                    {% elif object.name %}
+                        <div class="card col-lg-6 offset-lg-3 mb-3">
+                            <div class="card-body">
+                                <a>
+                                  <h2 class="card-title my-3"> Категория {{ object.name }} </h2>
+                                </a>
+                                <p class="card-text">{{ object.description|truncatewords:20 }}</p>
+                                <a class='btn btn-light' href="{% url 'mainapp:category' object.id %}">
+                                    Перейти на страницу категории</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card col-lg-6 offset-lg-3 mb-3">
+                            <div class="card-body">
+                                <a>
+                                  <h2 class="card-title my-3"> {{ object.username }} </h2>
+                                </a>
+                                <div class="text-muted mb-3">
+                                    <span><img height="150" src="{% if object.avatar_link %}
+                                    {{ object.avatar_link.url }} {% endif %}" alt=""></span>
+                                    <div>
+                                        <span>Имя: {{ object.first_name }} |</span>
+                                        <span>Фамилия: {{ object.last_name }}</span>
+                                    </div>
+                                </div>
+                                <p class="card-text">{{ object.user_about|truncatewords:20 }}</p>
+                                <a class='btn btn-light' href="{% url 'auth:users_detail' object.id %}">
+                                    Перейти на страницу профиля</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>Не найдено ничего по вашему запросу<br>Попробуйте повторить запрос с другой формулировкой</p>
+        {% endif %}
+    {% endif %}
+
+    <!-- Pagination -->
+  <div class="row">
+    <nav class="col-lg-6 offset-lg-3 mt-4 d-flex justify-content-center">
+      <ul class="pagination">
+
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+        <li class=" page-item {% if page_obj.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#">Next</a>
+        </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+  </div>
+  <!-- /Pagination -->
+{% endblock %}

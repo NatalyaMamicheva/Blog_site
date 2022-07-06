@@ -1,0 +1,66 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<!--Section: All articles-->
+<div class="row gx-5" style="width:80%; margin-left:10%;">
+    {% for article in articles %}
+  <div class="col-md-6 mb-4">
+    <div class="bg-image hover-overlay ripple shadow-2-strong rounded-5"
+      data-mdb-ripple-color="light">
+      <img src="{% if article.image %} {{ article.image.url }} {% else %} https://mdbcdn.b-cdn.net/img/new/slides/080.webp {% endif %}" alt="Article Image" class="img-fluid" width="850">
+      <a href="#!">
+        <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <span class="badge bg-danger px-2 py-1 shadow-1-strong mb-3">{{ article.category }}</span>
+      <span class="badge bg-secondary px-2 py-1 shadow-1-strong mb-3">{{ article.author }}</span>
+    <h4><strong>{{ article.title }}</strong></h4>
+    <p class="text-muted">
+      {{ article.article_text|truncatewords:100 }}
+    </p>
+    <a class='btn btn-light' href="{% url 'mainapp:article' article.pk %}">Читать дальше ...</a>
+  </div>
+    {% endfor %}
+ <!-- Pagination -->
+    <div class="row">
+        <nav class="col-lg-6 offset-lg-3 mt-4 d-flex justify-content-center">
+            <ul class="pagination">
+
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Предыдущая</a>
+                </li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                <li class=" page-item {% if page_obj.number == i %}active{% endif %}">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Следующая</a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
+    <!-- /Pagination -->
+
+</div>
+
+{% endblock %}

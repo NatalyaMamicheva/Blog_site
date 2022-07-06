@@ -1,0 +1,10 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %} Удаление статьи {% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Вы действительно хотите снять с публикации статью "{{ object.title }}"?</p>
+    <input type="submit" value="Снять с публикации">
+</form>
+{% endblock %}

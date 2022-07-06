@@ -1,0 +1,120 @@
+{% load static %}
+
+<header class="u-align-center-xs u-border-1 u-border-grey-25 u-clearfix u-grey-80 u-header u-sticky u-sticky-9aa7 u-header"
+        id="sec-a0db" data-animation-name="" data-animation-duration="0" data-animation-delay="0"
+        data-animation-direction="">
+    <div class="u-clearfix u-sheet u-sheet-1">
+        <a href="/" data-page-id="752105316" class="u-image u-logo u-image-1" title="Главная">
+            <img src="{% static 'images/logo.png' %}" class="u-logo-image u-logo-image-1">
+        </a>
+
+        <div>
+            {% include 'searchapp/searchbar.html' %}
+        </div>
+        <nav class="u-align-left u-menu u-menu-dropdown u-nav-spacing-25 u-offcanvas u-menu-1">
+            <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px; font-weight: 700;">
+                <a class="u-button-style u-custom-border u-custom-border-color u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-text-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link"
+                   href="#" style="padding: 4px 0px; font-size: calc(1em + 8px);">
+                    <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 302 302" style="">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-7b92"></use>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                         id="svg-7b92" x="0px" y="0px" viewBox="0 0 302 302" style="enable-background:new 0 0 302 302;"
+                         xml:space="preserve" class="u-svg-content"><g><rect y="36" width="302" height="30"></rect><rect
+                            y="236" width="302" height="30"></rect><rect y="136" width="302" height="30"></rect>
+</g>
+</svg>
+                </a>
+            </div>
+        </nav>
+        <div class="u-custom-menu u-nav-container">
+            {% if user.is_authenticated %}
+            <ul class="u-nav u-spacing-20 u-unstyled u-nav-1">
+                {% endif %}
+                {% if not user.is_authenticated %}
+            <ul class="u-nav u-spacing-20 u-unstyled u-nav-1 u-not-admin">
+                {% endif %}
+                {% if user.is_authenticated and not user.is_superuser %}
+            <ul class="u-nav u-spacing-20 u-unstyled u-nav-19 u-not-admin">
+                {% endif %}
+                {% if user.is_authenticated and user.is_superuser %}
+            <ul class="u-nav u-spacing-20 u-unstyled u-nav-19 u-admin">
+                {% endif %}
+                <li class="u-nav-item">
+                    <a class="u-button-style u-nav-link u-text-white"
+                       href="/" style="padding: 10px;">
+                        Главная
+                    </a>
+                </li>
+                <li class="u-nav-item">
+
+                    {% if user.is_authenticated %}
+
+                    <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                       href="{% url 'auth:users_detail' user.id %}" style="padding: 10px;">
+                        Профиль
+                    </a>
+                    {% endif %}
+                    <div class="u-nav-item">
+                        <ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-nav-2">
+                            <li class="u-nav-item">
+                                {% if not user.is_authenticated %}
+                                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                                   href="{% url 'auth:users_create' %}?next={{request.path}}" target="_blank">
+                                    Регистрация
+                                </a>
+                                {% endif %}
+                            </li>
+
+                            <li class="u-nav-item">
+                                {% if not user.is_authenticated %}
+                                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                                   href="{% url 'auth:login' %}">
+                                    Вход
+                                </a>
+                                {% endif %}
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="u-nav-item">
+                                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                                   href="{% url 'auth:logout' %}">
+                                    Выход
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="u-nav-item">
+                    <a
+                            class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                            href="/about_us" style="padding: 10px;">О нас
+                    </a>
+                </li>
+                {% if user.is_superuser %}
+                <li class="u-nav-item">
+                    <a
+                            class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                            href="/admin" style="padding: 10px;">Админка
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.is_staff %}
+                <li class="u-nav-item">
+                    <a
+                            class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                            href="/moderator_page" style="padding: 10px;">Модерация
+                    </a>
+                </li>
+                {% endif %}
+                <li class="u-nav-item">
+                    <a
+                            class="u-button-style u-nav-link u-text-active-palette-1-base u-text-white u-text-hover-palette-2-base"
+                            href="/help" style="padding: 10px;">Помощь
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+
