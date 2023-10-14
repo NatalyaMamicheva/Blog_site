@@ -1,0 +1,11 @@
+<div>
+
+    <ul class="nav nav-tabs justify-content-center">
+        {% for category in categories %}
+        <li class="nav-item">
+            <a class="nav-link link-dark" href="{% url 'mainapp:category' category.pk %}">{{ category.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>

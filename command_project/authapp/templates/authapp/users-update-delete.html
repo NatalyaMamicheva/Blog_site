@@ -1,0 +1,53 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %} Редактирование пользователя {% endblock %}
+{% block content %}
+<secton class="u-align-center">
+    <h1 class="mt-4" xmlns="http://www.w3.org/1999/html">Редактирование пользователя | {{ user.username }}</h1>
+    <div class="card-body " style="width: 50%; margin-left: 25%;">
+        <form action="{% url 'auth:users_update' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="reg-form-1">
+                    <div class="form-group">
+                        <label class="mid mb-1" for="{{ form.first_name.id_for_label }}">Имя</label>
+                        <input class="form-control" {{ form.first_name }} </div>
+                    </div>
+                    <div class="reg-form-1">
+                        <div class="form-group">
+                            <label class="mid mb-1" for="{{ form.last_name.id_for_label }}">Фамилия</label>
+                            <input class="form-control" {{ form.last_name }} </div>
+                        </div>
+                        <div class="reg-form-1">
+                            <label for="{{ form.avatar_link.id_for_label }}" class="form-label mid mb-2">Выберите
+                                изображение</label>
+                            {{ form.avatar_link }}
+                        </div>
+                        <div class="reg-form-1">
+                            <div class="form-group">
+                                <label class="mid mb-1" for="{{ form.user_about.id_for_label }}">Описание</label>
+                                <input class="form-control" {{ form.user_about }} </div>
+                            </div>
+                        </div>
+                        <div class="reg-form-1">
+                            <label class="mid mb-1" for="{{ form.username.id_for_label }}">Никнейм</label>
+                            <input class="form-control" {{ form.username }} </div>
+                            <div class="reg-form-1" style="margin-top: 33px;">
+                                <input class="btn btn-outline-dark" style="width: 120px;" type="submit"
+                                    value="Сохранить">
+                            </div>
+        </form>
+        <div class="reg-form-1" style="margin-top: 33px; ">
+            <form action="{% url 'auth:users_remove' %}" method="post"
+                onclick="return confirm('Вы действительно хотите удалить этот аккаунт?')">
+                {% csrf_token %}
+                <button onclick="return confirm('Вы уверенны, что хотите удалить профиль?');" class="btn btn-outline
+                -dark" style="width: 120px;"> Удалить
+                </button>
+            </form>
+        </div>
+    </div>
+
+    </div>
+</secton>
+{% endblock %}

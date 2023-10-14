@@ -1,0 +1,130 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %} Статья {% endblock %}
+{% block content %}
+
+<div class="container my-5 py-5">
+
+  <div class="row d-flex justify-content-center">
+    <div class="card px-3 pt-3" style="max-width: 60rem">
+      <!-- Статья -->
+      <div>
+        <!-- Фото -->
+        <div class="bg-image hover-overlay shadow-1-strong ripple rounded-5 mb-4" data-mdb-ripple-color="light"><img
+            src="{% if article.image %} {{ article.image.url }} {% else %} https://mdbcdn.b-cdn.net/img/new/slides/080.webp {% endif %}"
+            alt="Article Image" class="img-fluid" width="900>
+          <a href=" #!">
+          <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+          </a>
+        </div>
+
+        <!-- Данные о статье -->
+        <div class="row mb-3">
+          <div class="col-4 text-start">
+            {{article.category}}
+          </div>
+
+          <div class="col-4 text-center">
+            <a href="{% url 'auth:users_detail' article.author_id %}" class="text-info">
+              <u> {{ article.author }}</u>
+            </a>
+          </div>
+
+          <div class="col-4 text-end">
+            <u> {{ article.created_date }}</u>
+          </div>
+        </div>
+
+        <!-- Заголовок и текст -->
+        <br>
+        <div class="text-dark u-align-center">
+          <h5>{{article.title}}</h5>
+        </div>
+
+        <p class="ms-4 fs-5 lh-lg u-body text-muted d-block">
+          {{ article.article_text}}
+        </p>
+
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between ">
+        </div>
+      </div>
+      <!-- Реакции -->
+      <div class="card-body">
+        <div class="d-flex justify-content-between ">
+
+          <div>
+            <p class="text-muted">{{ comments.all.count }} комментариев </p>
+          </div>
+          <div>
+            <div>
+              {# {% if request.user.is_authenticated %}#}
+              {% include "mainapp/includes/like.html" with model=article text="лайк статье"%}
+              {# {% endif %}#}
+            </div>
+
+            <div>
+              {% if request.user.is_staff %}
+              {% if not article.is_banned %}
+              <form method="POST" action="{% url 'mod:ban' model='article' pk=article.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-link btn-xs" type="submit" name="next" value="{{ request.path }}">
+                  <i class="fas fa-ban text-muted"></i>
+                </button>
+              </form>
+              {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Реакции -->
+
+    </div>
+  </div>
+</div>
+
+{% include "mainapp/includes/comments.html" %}
+
+{% include 'mainapp/includes/inc_carousel.html' %}
+
+<!-- Nav buttons -->
+<div class="u-clearfix u-section-1 ">
+  <a href="/" data-page-id="752105316"
+    class="u-border-2 u-border-black u-btn u-button-style u-hover-black btn-outline-dark u-btn-1">
+    Вернуться назад</a>
+
+  {% if request.user.is_authenticated %}
+  {% if request.user.pk == article.author.pk %}
+  {% if article.is_published %}
+  <form method="post" action="{% url 'mainapp:delete_article' article.pk %}"
+    onclick="return confirm('Вы действительно хотите снять с публикации эту статью?')"> {% csrf_token %}
+    <button class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-btn-2">Снять с
+      публикации
+    </button>
+  </form>
+  <form method="post" action="{% url 'mainapp:update_article' article.pk %}"
+    onclick="return confirm('Вы действительно хотите редактировать эту статью?')"> {% csrf_token %}
+    <button class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-btn-2">Редактировать статью
+    </button>
+  </form>
+  {% endif %}
+  {% if not article.is_published %}
+  <form method="post" action="{% url 'mainapp:delete_article' article.pk %}"
+    onclick="return confirm('Вы хотите опубликовать эту статью?')"> {% csrf_token %}
+    <button class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-btn-2"> Опубликовать статью
+    </button>
+  </form>
+  <form method="post" action="{% url 'mainapp:update_article' article.pk %}"
+    onclick="return confirm('Вы действительно хотите редактировать эту статью?')"> {% csrf_token %}
+    <button class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-btn-2">Редактировать статью
+    </button>
+  </form>
+  {% endif %}
+  {% endif %}
+  {% endif %}
+</div>
+<!-- Nav buttons -->
+
+{% endblock %}

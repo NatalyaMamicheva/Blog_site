@@ -1,0 +1,43 @@
+<form id="{{ model.model_name }}-{{ model.pk }}-like-form" method="POST" >
+{#    #action="{% url 'mainapp:like' model.model_name model.pk %}"#}
+    {% csrf_token %}
+    <div class="d-flex flex-row align-items-center">
+        <div class="col">
+            <button class="btn btn-link btn-xs" type="submit" name="next" value="{{ request.path }}">
+                <i class="fas fa-thumbs-up mx-1 fa-s text-muted"></i>
+                <span class="small text-muted mb-0" id="{{ model.model_name }}-{{ model.pk }}-likes-count">
+                    {{ model.likes.all.count }}
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+      $('#{{ model.model_name }}-{{ model.pk }}-like-form').submit(function () {
+          $.ajax({
+              type: $(this).attr('method'),
+              url: "{% url 'mainapp:like' model.model_name model.pk %}",
+              success: function (response) {
+                  $('#{{ model.model_name }}-{{ model.pk }}-likes-count').text(function () {
+                      return response.likes_count;
+                      }
+                  )
+              },
+              error: function (response) {
+                  if (response.status === 302) {
+                      alert('авторизируйтесь');
+                      window.location.href = response.responseJSON.url;
+                  }
+                  else if (response.status === 403) {
+                      alert(response.responseJSON.error)
+                  }
+              }
+          });
+          return false;
+      });
+  })
+</script>

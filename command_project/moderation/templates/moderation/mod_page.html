@@ -1,0 +1,80 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %} Кабинет модератора {% endblock %}
+{% block content %}
+<section class="u-align-center">
+<h3> {{ title1 }} </h3>
+<br/>
+<div class="container-sm u-align-left">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Автор</th>
+            <th scope="col">Дата блокировки</th>
+            <th scope="col">Управление</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="4" class="u-align-center">
+                <h5>{{ title2 }}</h5>
+            </td>
+        </tr>
+        {% for object in article_list %}
+        <tr>
+            <td class="col-3">
+                <a href="{% url 'mainapp:article' object.banned_article.pk %}" class="link-secondary">
+                    {{ object.banned_article }}
+                </a>
+            </td>
+            <td class="col">
+                <a href="{% url 'auth:users_detail' object.get_object_author.id %}" >
+                    {{ object.get_object_author }}
+                </a>
+            </td>
+            <td class="col">{{object.banned_on }}</td>
+            <td class="col">
+                <form method="POST" action="{% url 'mod:unban' model='article' pk=object.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-link" type="submit">
+                        Разблокировать
+                    </button>
+                </form>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="4" class="u-align-center">
+                <h5>{{ title3 }}</h5>
+            </td>
+        </tr>
+        {% for object in comment_list %}
+        <tr>
+            <td>К статье <a href="{% url 'mainapp:article' object.banned_comment.article_id %}" class="link-secondary">
+                {{ object.banned_comment.article }}</a>
+            </td>
+            <td>
+                <a href="{% url 'auth:users_detail' object.get_object_author.id %}" >{{ object.get_object_author }}
+                </a>
+            </td>
+            <td>{{object.banned_on }}</td>
+            <td>
+                <form method="POST" action="{% url 'mod:unban' model='comment' pk=object.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-link" type="submit">
+                        Разблокировать
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+<br>
+    </section>
+{% endblock %}
